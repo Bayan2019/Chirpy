@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
@@ -22,6 +23,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	dbg := flag.Bool("debug", false, "Enable debug mode")
+	flag.Parse()
+	if dbg != nil && *dbg {
+		err := db.ResetDB()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	apiCfg := apiConfig{
 		fileserverHits: 0,
 		DB:             db,
@@ -37,8 +47,11 @@ func main() {
 
 	api_router.Get("/healthz", handlerReadiness)
 	api_router.Get("/reset", apiCfg.handlerReset)
+
+	api_router.Post("/login", apiCfg.handlerLogin)
 	api_router.Post("/users", apiCfg.handlerUsersCreate)
 	api_router.Post("/chirps", apiCfg.handlerChirpsCreate)
+
 	api_router.Get("/chirps", apiCfg.handlerChirpsRetrieve)
 	api_router.Get("/chirps/{chirpID}", apiCfg.handlerChirpsGet)
 
