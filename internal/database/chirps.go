@@ -1,9 +1,5 @@
 package database
 
-import "errors"
-
-var ErrNotExist = errors.New("resource does not exist")
-
 type Chirp struct {
 	ID   int    `json:"id"`
 	Body string `json:"body"`
