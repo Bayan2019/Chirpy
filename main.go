@@ -70,6 +70,8 @@ func main() {
 	api_router.Get("/chirps", apiCfg.handlerChirpsRetrieve)
 	api_router.Get("/chirps/{chirpID}", apiCfg.handlerChirpsGet)
 
+	api_router.Delete("/chirps/{chirpID}", apiCfg.handlerChirpsDelete)
+
 	app_router.Mount("/api", api_router)
 
 	admin_router := chi.NewRouter()

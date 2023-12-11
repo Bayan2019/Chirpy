@@ -46,6 +46,23 @@ func (db *DB) ensureDB() error {
 	return err
 }
 
+func (db *DB) writeDB(dbStructure DBStructure) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+
+	dat, err := json.Marshal(dbStructure)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(db.path, dat, 0600)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (db *DB) ResetDB() error {
 	err := os.Remove(db.path)
 	if errors.Is(err, os.ErrNotExist) {
@@ -71,21 +88,4 @@ func (db *DB) loadDB() (DBStructure, error) {
 	}
 
 	return dbStructure, nil
-}
-
-func (db *DB) writeDB(dbStructure DBStructure) error {
-	db.mu.Lock()
-	defer db.mu.Unlock()
-
-	dat, err := json.Marshal(dbStructure)
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(db.path, dat, 0600)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
