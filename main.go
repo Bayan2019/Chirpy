@@ -4,19 +4,28 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Bayan2019/chirpy/internal/database"
 	"github.com/go-chi/chi/v5"
+	"github.com/joho/godotenv"
 )
 
 type apiConfig struct {
 	fileserverHits int
 	DB             *database.DB
+	jwtSecret      string
 }
 
 func main() {
 	const filepathRoot = "."
 	const port = "8080"
+
+	godotenv.Load(".env")
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET environment variable is not set")
+	}
 
 	db, err := database.NewDB("database.json")
 	if err != nil {
@@ -35,6 +44,7 @@ func main() {
 	apiCfg := apiConfig{
 		fileserverHits: 0,
 		DB:             db,
+		jwtSecret:      jwtSecret,
 	}
 
 	app_router := chi.NewRouter()
@@ -50,6 +60,9 @@ func main() {
 
 	api_router.Post("/login", apiCfg.handlerLogin)
 	api_router.Post("/users", apiCfg.handlerUsersCreate)
+
+	api_router.Put("/users", apiCfg.handlerUsersUpdate)
+
 	api_router.Post("/chirps", apiCfg.handlerChirpsCreate)
 
 	api_router.Get("/chirps", apiCfg.handlerChirpsRetrieve)
