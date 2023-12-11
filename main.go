@@ -72,6 +72,8 @@ func main() {
 
 	api_router.Delete("/chirps/{chirpID}", apiCfg.handlerChirpsDelete)
 
+	api_router.Post("/polka/webhooks", apiCfg.handlerWebhook)
+
 	app_router.Mount("/api", api_router)
 
 	admin_router := chi.NewRouter()
