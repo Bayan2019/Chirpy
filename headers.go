@@ -2,6 +2,7 @@ package main
 
 import "net/http"
 
+// 1. Servers / 4. Server
 func middlewareCors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")

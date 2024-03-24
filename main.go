@@ -19,6 +19,7 @@ type apiConfig struct {
 }
 
 func main() {
+	// 1. Servers / 4. Server
 	const filepathRoot = "."
 	const port = "8080"
 
@@ -53,12 +54,14 @@ func main() {
 		polkaKey:       polkaKey,
 	}
 
+	//mux := http.NewServeMux()
 	app_router := chi.NewRouter()
 
 	fsHandler := apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot))))
 	app_router.Handle("/app", fsHandler)
 	app_router.Handle("/app/*", fsHandler)
 
+	//mux := http.NewServeMux()
 	api_router := chi.NewRouter()
 
 	api_router.Get("/healthz", handlerReadiness)
@@ -82,14 +85,17 @@ func main() {
 
 	app_router.Mount("/api", api_router)
 
+	// mux := http.NewServeMux()
 	admin_router := chi.NewRouter()
 
 	admin_router.Get("/metrics", apiCfg.handlerMetrics)
 
 	app_router.Mount("/admin", admin_router)
 
+	// 1. Servers / 4. Server
+	// corsMux := middlewareCors(mux)
 	corsMux := middlewareCors(app_router)
-
+	// 1. Servers / 4. Server
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: corsMux,
