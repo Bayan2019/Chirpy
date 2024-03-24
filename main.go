@@ -19,8 +19,10 @@ type apiConfig struct {
 }
 
 func main() {
-	// 1. Servers / 4. Server
 	const filepathRoot = "."
+
+	// 1. Servers / 4. Server
+	// const port = "8080"
 	const port = "8080"
 
 	godotenv.Load(".env")
@@ -100,6 +102,10 @@ func main() {
 	corsMux := middlewareCors(app_router)
 
 	// 1. Servers / 4. Server
+	// srv := &http.Server{
+	// 	Addr:    ":" + port,
+	// 	Handler: corsMux,
+	// }
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: corsMux,
