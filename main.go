@@ -57,7 +57,8 @@ func main() {
 	}
 
 	// 1. Servers / 4. Server
-	//mux := http.NewServeMux()
+	// Create a new http.ServeMux
+	// mux := http.NewServeMux()
 	app_router := chi.NewRouter()
 
 	fsHandler := apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot))))
@@ -98,6 +99,7 @@ func main() {
 	app_router.Mount("/admin", admin_router)
 
 	// 1. Servers / 4. Server
+	// Wrap that mux in a custom middleware function that adds CORS headers
 	// corsMux := middlewareCors(mux)
 	corsMux := middlewareCors(app_router)
 
