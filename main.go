@@ -54,6 +54,7 @@ func main() {
 		polkaKey:       polkaKey,
 	}
 
+	// 1. Servers / 4. Server
 	//mux := http.NewServeMux()
 	app_router := chi.NewRouter()
 
@@ -61,6 +62,7 @@ func main() {
 	app_router.Handle("/app", fsHandler)
 	app_router.Handle("/app/*", fsHandler)
 
+	// 1. Servers / 4. Server
 	//mux := http.NewServeMux()
 	api_router := chi.NewRouter()
 
@@ -85,6 +87,7 @@ func main() {
 
 	app_router.Mount("/api", api_router)
 
+	// 1. Servers / 4. Server
 	// mux := http.NewServeMux()
 	admin_router := chi.NewRouter()
 
@@ -95,12 +98,16 @@ func main() {
 	// 1. Servers / 4. Server
 	// corsMux := middlewareCors(mux)
 	corsMux := middlewareCors(app_router)
+
 	// 1. Servers / 4. Server
 	srv := &http.Server{
 		Addr:    ":" + port,
 		Handler: corsMux,
 	}
 
+	// 1. Servers / 4. Server
+	// log.Printf("Serving on port: %s\n", port)
+	// log.Fatal(srv.ListenAndServe())
 	log.Printf("Serving files from %s on port: %s\n", filepathRoot, port)
 	log.Fatal(srv.ListenAndServe())
 }
