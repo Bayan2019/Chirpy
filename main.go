@@ -87,13 +87,17 @@ func main() {
 	app_router.Handle("/app", fsHandler)
 	app_router.Handle("/app/*", fsHandler)
 
+	// 1. Servers / 5. Fileservers
 	// I recommend using the mux.HandleFunc to register your handler.
 	// mux.HandleFunc("/healthz", handlerReadiness)
-	app_router.Get("/healthz", handlerReadiness)
+	// app_router.Get("/healthz", handlerReadiness)
 
-	app_router.Get("/metrics", apiCfg.handlerMetrics)
+	// 2. Routing / 1. Stateful Handlers
+	// mux.HandleFunc("/metrics", apiCfg.handlerMetrics)
+	// app_router.Get("/metrics", apiCfg.handlerMetrics)
 	// register a handler on the /reset path
-	app_router.Get("/reset", apiCfg.handlerReset)
+	// mux.HandleFunc("/reset", apiCfg.handlerReset)
+	// app_router.Get("/reset", apiCfg.handlerReset)
 
 	// 1. Servers / 4. Server
 	//mux := http.NewServeMux()
@@ -101,8 +105,11 @@ func main() {
 
 	// 1. Servers / 11. Custom Handlers
 	// The endpoint should be accessible at the /healthz path using any HTTP method.
-	// api_router.Get("/healthz", handlerReadiness)
-	// api_router.Get("/reset", apiCfg.handlerReset)
+	api_router.Get("/healthz", handlerReadiness)
+	// 2. Routing / 1. Stateful Handlers
+	// register a handler on the /reset path
+	// mux.HandleFunc("/reset", apiCfg.handlerReset)
+	api_router.Get("/reset", apiCfg.handlerReset)
 
 	api_router.Post("/revoke", apiCfg.handlerRevoke)
 	api_router.Post("/refresh", apiCfg.handlerRefresh)
@@ -126,7 +133,9 @@ func main() {
 	// mux := http.NewServeMux()
 	admin_router := chi.NewRouter()
 
-	// admin_router.Get("/metrics", apiCfg.handlerMetrics)
+	// 2. Routing / 1. Stateful Handlers
+	// mux.HandleFunc("/metrics", apiCfg.handlerMetrics)
+	admin_router.Get("/metrics", apiCfg.handlerMetrics)
 
 	app_router.Mount("/admin", admin_router)
 
