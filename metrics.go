@@ -19,6 +19,7 @@ func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {
 
 // 2. Routing / 1. Stateful Handlers
 // write a new middleware method on a *apiConfig that increments the fileserverHits counter
+// // 2. Routing / 1. Middleware
 func (cfg *apiConfig) middlewareMetricsInc(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cfg.fileserverHits++

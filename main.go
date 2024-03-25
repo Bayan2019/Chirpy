@@ -90,13 +90,20 @@ func main() {
 	// 1. Servers / 5. Fileservers
 	// I recommend using the mux.HandleFunc to register your handler.
 	// mux.HandleFunc("/healthz", handlerReadiness)
+	// 2. Routing / 4. Routing
+	// mux.HandleFunc("GET /healthz", handlerReadiness)
 	// app_router.Get("/healthz", handlerReadiness)
 
 	// 2. Routing / 1. Stateful Handlers
 	// mux.HandleFunc("/metrics", apiCfg.handlerMetrics)
+	// 2. Routing / 4. Routing
+	// mux.HandleFunc("GET /metrics", apiCfg.handlerMetrics)
 	// app_router.Get("/metrics", apiCfg.handlerMetrics)
+
 	// register a handler on the /reset path
 	// mux.HandleFunc("/reset", apiCfg.handlerReset)
+	// 2. Routing / 4. Routing
+	// mux.HandleFunc("GET /reset", apiCfg.handlerReset)
 	// app_router.Get("/reset", apiCfg.handlerReset)
 
 	// 1. Servers / 4. Server
