@@ -11,6 +11,12 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// 2. Routing / 1. Stateful Handlers
+// Create a struct that will hold any stateful, in-memory data we'll need to keep track of
+//
+//	type apiConfig struct {
+//		fileserverHits int
+//	}
 type apiConfig struct {
 	fileserverHits int
 	DB             *database.DB
@@ -67,15 +73,27 @@ func main() {
 	// Use a standard http.FileServer as the handler
 	// Use http.Dir to convert a filepath to a directory for the http.FileServer
 	// mux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
+
+	// 2. Routing / 1. Stateful Handlers
+	// Wrap the http.FileServer handler with the middleware "middlewareMetricsInc"
 	fsHandler := apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot))))
+
 	// 1. Servers / 5. Fileservers
 	// Use the http.NewServeMux's .Handle() method to add a handler
+
+	// 2. Routing / 1. Stateful Handlers
+	// Wrap the http.FileServer handler with the middleware "middlewareMetricsInc"
+	// mux.Handle("/app/", apiCfg.middlewareMetricsInc(handler))
 	app_router.Handle("/app", fsHandler)
 	app_router.Handle("/app/*", fsHandler)
 
 	// I recommend using the mux.HandleFunc to register your handler.
 	// mux.HandleFunc("/healthz", handlerReadiness)
-	// app_router.Get("/healthz", handlerReadiness)
+	app_router.Get("/healthz", handlerReadiness)
+
+	app_router.Get("/metrics", apiCfg.handlerMetrics)
+	// register a handler on the /reset path
+	app_router.Get("/reset", apiCfg.handlerReset)
 
 	// 1. Servers / 4. Server
 	//mux := http.NewServeMux()
@@ -83,8 +101,8 @@ func main() {
 
 	// 1. Servers / 11. Custom Handlers
 	// The endpoint should be accessible at the /healthz path using any HTTP method.
-	api_router.Get("/healthz", handlerReadiness)
-	api_router.Get("/reset", apiCfg.handlerReset)
+	// api_router.Get("/healthz", handlerReadiness)
+	// api_router.Get("/reset", apiCfg.handlerReset)
 
 	api_router.Post("/revoke", apiCfg.handlerRevoke)
 	api_router.Post("/refresh", apiCfg.handlerRefresh)
@@ -108,7 +126,7 @@ func main() {
 	// mux := http.NewServeMux()
 	admin_router := chi.NewRouter()
 
-	admin_router.Get("/metrics", apiCfg.handlerMetrics)
+	// admin_router.Get("/metrics", apiCfg.handlerMetrics)
 
 	app_router.Mount("/admin", admin_router)
 

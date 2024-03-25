@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+// 2. Routing / 1. Stateful Handlers
+// Create a new handler that writes the number of requests
 func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
@@ -16,6 +18,8 @@ func (cfg *apiConfig) handlerMetrics(w http.ResponseWriter, r *http.Request) {
 	</html>`, cfg.fileserverHits)))
 }
 
+// 2. Routing / 1. Stateful Handlers
+// write a new middleware method on a *apiConfig that increments the fileserverHits counter
 func (cfg *apiConfig) middlewareMetricsInc(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cfg.fileserverHits++
