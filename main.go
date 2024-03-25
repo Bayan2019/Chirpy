@@ -64,18 +64,25 @@ func main() {
 	app_router := chi.NewRouter()
 
 	// 1. Servers / 5. Fileservers
-	// Use the http.NewServeMux's .Handle() method to add a handler
 	// Use a standard http.FileServer as the handler
 	// Use http.Dir to convert a filepath to a directory for the http.FileServer
 	// mux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
 	fsHandler := apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot))))
+	// 1. Servers / 5. Fileservers
+	// Use the http.NewServeMux's .Handle() method to add a handler
 	app_router.Handle("/app", fsHandler)
 	app_router.Handle("/app/*", fsHandler)
+
+	// I recommend using the mux.HandleFunc to register your handler.
+	// mux.HandleFunc("/healthz", handlerReadiness)
+	// app_router.Get("/healthz", handlerReadiness)
 
 	// 1. Servers / 4. Server
 	//mux := http.NewServeMux()
 	api_router := chi.NewRouter()
 
+	// 1. Servers / 11. Custom Handlers
+	// The endpoint should be accessible at the /healthz path using any HTTP method.
 	api_router.Get("/healthz", handlerReadiness)
 	api_router.Get("/reset", apiCfg.handlerReset)
 
