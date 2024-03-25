@@ -19,6 +19,8 @@ type apiConfig struct {
 }
 
 func main() {
+	// 1. Servers / 5. Fileservers
+	// const filepathRoot = "."
 	const filepathRoot = "."
 
 	// 1. Servers / 4. Server
@@ -61,6 +63,11 @@ func main() {
 	// mux := http.NewServeMux()
 	app_router := chi.NewRouter()
 
+	// 1. Servers / 5. Fileservers
+	// Use the http.NewServeMux's .Handle() method to add a handler
+	// Use a standard http.FileServer as the handler
+	// Use http.Dir to convert a filepath to a directory for the http.FileServer
+	// mux.Handle("/", http.FileServer(http.Dir(filepathRoot)))
 	fsHandler := apiCfg.middlewareMetricsInc(http.StripPrefix("/app", http.FileServer(http.Dir(filepathRoot))))
 	app_router.Handle("/app", fsHandler)
 	app_router.Handle("/app/*", fsHandler)
@@ -104,6 +111,7 @@ func main() {
 	corsMux := middlewareCors(app_router)
 
 	// 1. Servers / 4. Server
+	// Create a new http.Server and use the corsMux as the handler
 	// srv := &http.Server{
 	// 	Addr:    ":" + port,
 	// 	Handler: corsMux,
@@ -114,6 +122,7 @@ func main() {
 	}
 
 	// 1. Servers / 4. Server
+	// Use the server's ListenAndServe method to start the server
 	// log.Printf("Serving on port: %s\n", port)
 	// log.Fatal(srv.ListenAndServe())
 	log.Printf("Serving files from %s on port: %s\n", filepathRoot, port)
