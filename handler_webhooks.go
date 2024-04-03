@@ -2,11 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
+	// "errors"
 	"net/http"
-
-	"github.com/Bayan2019/chirpy/internal/auth"
-	"github.com/Bayan2019/chirpy/internal/database"
+	// "github.com/Bayan2019/chirpy/internal/auth"
+	// "github.com/Bayan2019/chirpy/internal/database"
 )
 
 func (cfg *apiConfig) handlerWebhook(w http.ResponseWriter, r *http.Request) {
@@ -18,19 +17,19 @@ func (cfg *apiConfig) handlerWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	apiKey, err := auth.GetAPIKey(r.Header)
-	if err != nil {
-		respondWithError(w, http.StatusUnauthorized, "Couldn't find api key")
-	}
-	if apiKey != cfg.polkaKey {
-		respondWithError(w, http.StatusUnauthorized, "API key is invalid")
-		return
-	}
+	// apiKey, err := auth.GetAPIKey(r.Header)
+	// if err != nil {
+	// 	respondWithError(w, http.StatusUnauthorized, "Couldn't find api key")
+	// }
+	// if apiKey != cfg.polkaKey {
+	// 	respondWithError(w, http.StatusUnauthorized, "API key is invalid")
+	// 	return
+	// }
 
 	decoder := json.NewDecoder(r.Body)
 	params := parameters{}
 
-	err = decoder.Decode(&params)
+	err := decoder.Decode(&params)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters")
 		return
@@ -41,15 +40,15 @@ func (cfg *apiConfig) handlerWebhook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = cfg.DB.UpgradeChirpyRed(params.Data.UserID)
-	if err != nil {
-		if errors.Is(err, database.ErrNotExist) {
-			respondWithError(w, http.StatusNotFound, "Couldn't find user")
-			return
-		}
-		respondWithError(w, http.StatusInternalServerError, "Couldn't update user")
-		return
-	}
+	// _, err = cfg.DB.UpgradeChirpyRed(params.Data.UserID)
+	// if err != nil {
+	// 	if errors.Is(err, database.ErrNotExist) {
+	// 		respondWithError(w, http.StatusNotFound, "Couldn't find user")
+	// 		return
+	// 	}
+	// 	respondWithError(w, http.StatusInternalServerError, "Couldn't update user")
+	// 	return
+	// }
 
 	respondWithJSON(w, http.StatusOK, struct{}{})
 }

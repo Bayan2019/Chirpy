@@ -1,22 +1,28 @@
 package database
 
 type Chirp struct {
-	ID       int    `json:"id"`
-	AuthorID int    `json:"author_id"`
-	Body     string `json:"body"`
+	// AuthorID int    `json:"author_id"`
+	Body string `json:"body"`
+	ID   int    `json:"id"`
 }
 
-func (db *DB) CreateChirp(body string, authorID int) (Chirp, error) {
+// 5. Storage / 1. Storage
+// CreateChirp creates a new chirp and saves it to disk
+func (db *DB) CreateChirp(body string) (Chirp, error) {
+	// func (db *DB) CreateChirp(body string, authorID int) (Chirp, error) {
 	dbStructure, err := db.loadDB()
 	if err != nil {
 		return Chirp{}, err
 	}
 
+	// 5. Storage / 1. Storage
+	// For now, just use integers for the id field,
+	// and increment the id by 1 for each new chirp
 	id := len(dbStructure.Chirps) + 1
 	chirp := Chirp{
-		ID:       id,
-		AuthorID: authorID,
-		Body:     body,
+		ID: id,
+		// AuthorID: authorID,
+		Body: body,
 	}
 	dbStructure.Chirps[id] = chirp
 
@@ -28,6 +34,8 @@ func (db *DB) CreateChirp(body string, authorID int) (Chirp, error) {
 	return chirp, nil
 }
 
+// 5. Storage / 1. Storage
+// GetChirps returns all chirps in the database
 func (db *DB) GetChirps() ([]Chirp, error) {
 	dbStructure, err := db.loadDB()
 	if err != nil {
@@ -42,6 +50,8 @@ func (db *DB) GetChirps() ([]Chirp, error) {
 	return chirps, nil
 }
 
+// 5. Storage / 4. Get
+// Add a new endpoint to your server that allows users to get a single chirp by ID.
 func (db *DB) GetChirp(id int) (Chirp, error) {
 	dbStructure, err := db.loadDB()
 	if err != nil {
@@ -49,6 +59,7 @@ func (db *DB) GetChirp(id int) (Chirp, error) {
 	}
 
 	chirp, ok := dbStructure.Chirps[id]
+	// If the chirp does not exist, the server should return a 404 status code.
 	if !ok {
 		return Chirp{}, ErrNotExist
 	}

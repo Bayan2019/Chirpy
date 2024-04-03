@@ -8,7 +8,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+// 5. Storage / 4. Get
 func (cfg *apiConfig) handlerChirpsGet(w http.ResponseWriter, r *http.Request) {
+	// 5. Storage / 4. Get
+	// chirpIDString := r.PathValue("chirpID")
 	chirpIDString := chi.URLParam(r, "chirpID")
 
 	chirpID, err := strconv.Atoi(chirpIDString)
@@ -24,12 +27,14 @@ func (cfg *apiConfig) handlerChirpsGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusOK, Chirp{
-		ID:       dbChirp.ID,
-		AuthorID: dbChirp.AuthorID,
-		Body:     dbChirp.Body,
+		ID: dbChirp.ID,
+		// AuthorID: dbChirp.AuthorID,
+		Body: dbChirp.Body,
 	})
 }
 
+// 5. Storage / 1. Storage
+// This endpoint should return an array of all chirps in the file, ordered by id in ascending order
 func (cfg *apiConfig) handlerChirpsRetrieve(w http.ResponseWriter, r *http.Request) {
 
 	dbChirps, err := cfg.DB.GetChirps()
@@ -38,15 +43,15 @@ func (cfg *apiConfig) handlerChirpsRetrieve(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	authorID := -1
-	authorIDString := r.URL.Query().Get("author_id")
-	if authorIDString != "" {
-		authorID, err = strconv.Atoi(authorIDString)
-		if err != nil {
-			respondWithError(w, http.StatusBadRequest, "Invalid author ID")
-			return
-		}
-	}
+	// authorID := -1
+	// authorIDString := r.URL.Query().Get("author_id")
+	// if authorIDString != "" {
+	// 	authorID, err = strconv.Atoi(authorIDString)
+	// 	if err != nil {
+	// 		respondWithError(w, http.StatusBadRequest, "Invalid author ID")
+	// 		return
+	// 	}
+	// }
 
 	sortDirection := "asc"
 	sortDirectionParam := r.URL.Query().Get("sort")
@@ -56,14 +61,15 @@ func (cfg *apiConfig) handlerChirpsRetrieve(w http.ResponseWriter, r *http.Reque
 
 	chirps := []Chirp{}
 	for _, dbChirp := range dbChirps {
-		if authorID != -1 && dbChirp.AuthorID != authorID {
-			continue
-		}
+
+		// if authorID != -1 && dbChirp.AuthorID != authorID {
+		// 	continue
+		// }
 
 		chirps = append(chirps, Chirp{
-			ID:       dbChirp.ID,
-			AuthorID: dbChirp.AuthorID,
-			Body:     dbChirp.Body,
+			ID: dbChirp.ID,
+			// AuthorID: dbChirp.AuthorID,
+			Body: dbChirp.Body,
 		})
 	}
 

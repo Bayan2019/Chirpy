@@ -7,40 +7,40 @@ type Revocation struct {
 	RevokedAt time.Time `json:"revoked_at"`
 }
 
-func (db *DB) RevokeToken(token string) error {
-	dbStructure, err := db.loadDB()
-	if err != nil {
-		return err
-	}
+// func (db *DB) RevokeToken(token string) error {
+// 	dbStructure, err := db.loadDB()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	revocation := Revocation{
-		Token:     token,
-		RevokedAt: time.Now().UTC(),
-	}
-	dbStructure.Revocations[token] = revocation
+// 	revocation := Revocation{
+// 		Token:     token,
+// 		RevokedAt: time.Now().UTC(),
+// 	}
+// 	dbStructure.Revocations[token] = revocation
 
-	err = db.writeDB(dbStructure)
-	if err != nil {
-		return err
-	}
+// 	err = db.writeDB(dbStructure)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-func (db *DB) IsTokenRevoked(token string) (bool, error) {
-	dbStructure, err := db.loadDB()
-	if err != nil {
-		return false, err
-	}
+// func (db *DB) IsTokenRevoked(token string) (bool, error) {
+// 	dbStructure, err := db.loadDB()
+// 	if err != nil {
+// 		return false, err
+// 	}
 
-	revocation, ok := dbStructure.Revocations[token]
-	if !ok {
-		return false, nil
-	}
+// 	revocation, ok := dbStructure.Revocations[token]
+// 	if !ok {
+// 		return false, nil
+// 	}
 
-	if revocation.RevokedAt.IsZero() {
-		return false, nil
-	}
+// 	if revocation.RevokedAt.IsZero() {
+// 		return false, nil
+// 	}
 
-	return true, nil
-}
+// 	return true, nil
+// }
